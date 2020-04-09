@@ -3,7 +3,8 @@ import * as THREE from './build/three.module.js';
 import Stats from './jsm/stats.module.js';
 
 import { OrbitControls } from './jsm/OrbitControls.js';
-// import { FBXLoader } from './jsm/FBXLoader.js';
+import { FBXLoader } from './jsm/FBXLoader.js';
+// import { GLTFLoader } from './jsm/GLTFLoader.js';
 
 var container, stats, controls;
 let renderer, scene, camera;
@@ -32,14 +33,14 @@ function init() {
   camera.position.set(100, 200, 300);
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xa0a0a0);
-  scene.fog = new THREE.Fog(0xa0a0a0, 200, 1000);
+  scene.background = new THREE.Color(0x50a0a0);
+  scene.fog = new THREE.Fog(0x8080a0, 200, 1000);
 
   let light = new THREE.HemisphereLight(0xffffff, 0x444444);
   light.position.set(0, 200, 0);
   scene.add(light);
 
-  light = new THREE.DirectionalLight(0xffffff);
+  light = new THREE.DirectionalLight(0x205fff);
   light.position.set(0, 200, 100);
   light.castShadow = true;
   light.shadow.camera.top = 180;
@@ -53,34 +54,38 @@ function init() {
   // ground
   let mesh = new THREE.Mesh(
     new THREE.PlaneBufferGeometry(2000, 2000),
-    new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false })
+    new THREE.MeshPhongMaterial({ color: 0x291999, depthWrite: false })
   );
   mesh.rotation.x = -Math.PI / 2;
   mesh.receiveShadow = true;
-  scene.add(mesh);
+  // scene.add(mesh);
 
-  let grid = new THREE.GridHelper(2000, 20, 0x000000, 0x000000);
-  grid.material.opacity = 0.2;
+  let grid = new THREE.GridHelper(2000, 20, 0xf00000, 0x0000f0);
+  grid.material.opacity = 0.8;
   grid.material.transparent = true;
   scene.add(grid);
 
   // model
-  // let loader = new FBXLoader();
-  // loader.load('rollingcube.fbx', function (object) {
-  //   mixer = new THREE.AnimationMixer(object);
+  let loader = new FBXLoader();
+  loader.load('rollingcube.fbx', function (object) {
+    mixer = new THREE.AnimationMixer(object);
 
-  //   let action = mixer.clipAction(object.animations[0]);
-  //   action.play();
+    let action = mixer.clipAction(object.animations[0]);
+    action.play();
 
-  //   object.traverse(function (child) {
-  //     if (child.isMesh) {
-  //       child.castShadow = true;
-  //       child.receiveShadow = true;
-  //     }
-  //   });
+    object.traverse(function (child) {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
 
-  //   scene.add(object);
-  // });
+    scene.add(object);
+  });
+
+  loader.load('platform.fbx', function (object) {
+    scene.add(object);
+  });
 
   // renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
