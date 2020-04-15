@@ -34,7 +34,7 @@ function init() {
     0.1,
     5000
   );
-  camera.position.set(9, 6, 12);
+  camera.position.set(11, 8, 12);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   scene = new THREE.Scene();
