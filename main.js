@@ -16,10 +16,18 @@ init();
 animate();
 
 function init() {
-  const canvas = document.querySelector('#c');
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  const container = document.querySelector('#container');
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
-  // create camera
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  container.appendChild(renderer.domElement);
+
+  stats = new Stats();
+  container.appendChild(stats.dom);
+
+  // camera
   camera = new THREE.PerspectiveCamera(
     45,
     window.innerWidth / window.innerHeight,
@@ -30,53 +38,46 @@ function init() {
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   scene = new THREE.Scene();
-  // scene.background = new THREE.Color(0xb9efff);
   scene.background = new THREE.Color(0xffffff);
-  scene.fog = new THREE.Fog(0xffffff, 10, 22);
+  // scene.fog = new THREE.Fog(0xffffff, 10, 22);
+  scene.fog = new THREE.FogExp2(0xffffff, 0.022);
 
-  let light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.6); // sky color, ground color, intensity
+  let light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.1); // sky color, ground color, intensity
   light.position.set(0, 8, 0);
   scene.add(light);
 
-  light = new THREE.DirectionalLight(0xd0dfdf, 1.0);
-  light.position.set(-2, 30, 5);
+  light = new THREE.DirectionalLight(0xd0dfdf, 0.8);
+  light.position.set(8, 25, -9);
   light.target.position.set(0, 0, 0);
   light.castShadow = true;
 
   // light.shadow.bias = -0.004;
-  light.shadow.mapSize.width = 1024;
-  light.shadow.mapSize.height = 1024;
+  light.shadow.mapSize.width = 2048;
+  light.shadow.mapSize.height = 2048;
   light.shadow.camera.near = 0.1;
   light.shadow.camera.far = 120;
-  // light.shadow.camera.top = 1200;
-  // light.shadow.camera.bottom = -1000;
-  // light.shadow.camera.left = -1200;
-  // light.shadow.camera.right = 1200;
   light.shadow.radius = 10;
   scene.add(light);
   scene.add(light.target);
 
-  // scene.add(new CameraHelper(light.shadow.camera));
-
   let newMat = new THREE.MeshStandardMaterial({
-    color: 0xb94f69,
-    // emissive: 0xee6677,
-    metalness: 0,
+    color: 0x390f19,
+    emissive: 0x2e6677,
+    emissiveIntensity: 0.4,
+    metalness: 1,
     roughness: 1
   });
 
   // ground
   let ground = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(100, 100),
+    new THREE.PlaneBufferGeometry(200, 200),
     newMat
-    // new THREE.MeshStandardMaterial({ color: 0x69afb9, depthWrite: true })
   );
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = -5;
   scene.add(ground);
   ground.receiveShadow = true;
 
-  // grid
   // let grid = new THREE.GridHelper(2000, 20, 0xf00000, 0x0000f0); // size, divisions, colorCenterLine, colorGrid
   // grid.material.opacity = 0.8;
   // grid.material.transparent = true;
@@ -106,48 +107,36 @@ function init() {
     // mixer.clipAction(gltf.animations[0]).play(); // this is the same as the above three lines
   });
 
-  // platform
+  // platform // for fbx loader
   // loader.load('platform.fbx', object => {
   //   object.castShadow = true;
   //   object.receiveShadow = true;
   //   scene.add(object);
   // });
 
-  // renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
+  // renderer.shadowMap.type = THREE.VSMShadowMap;
+  // renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.shadowMap.type = 1;
   renderer.shadowMapSoft = true;
-
-  renderer.shadowCameraNear = 1;
-  renderer.shadowCameraFar = camera.far;
-  renderer.shadowCameraFov = 95;
-
-  renderer.shadowMapBias = 0.0039;
-  renderer.shadowMapDarkness = 0.5;
-  renderer.shadowMapWidth = 1024;
 
   // for accurate colors
   renderer.gammaFactor = 2.2;
   renderer.gammaOutput = true;
 
   renderer.physicallyCorrectLights = true;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 0, 0);
   controls.update();
 
   window.addEventListener('resize', onWindowResize, false);
-
-  // stats
-  stats = new Stats();
-  // container.appendChild(stats.dom);
 }
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
@@ -158,78 +147,7 @@ function animate() {
 
   if (mixer) mixer.update(delta);
   controls.update(delta);
-
-  // stats.update();
+  stats.update();
 
   renderer.render(scene, camera);
-}
-
-function main() {
-  const canvas = document.querySelector('#c');
-  const renderer = new THREE.WebGLRenderer({ canvas });
-
-  // camera
-  const fov = 40;
-  const aspect = 2; // canvas default
-  const near = 0.1;
-  const far = 1000;
-  const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.z = 120;
-
-  function createMaterial() {
-    const material = new THREE.MeshPhongMaterial({
-      side: THREE.DoubleSide
-    });
-
-    const hue = Math.random();
-    const saturation = 1;
-    const luminance = 0.5;
-    material.color.setHSL(hue, saturation, luminance);
-
-    return material;
-  }
-
-  function addSolidGeometry(x, y, geometry) {
-    const mesh = new THREE.Mesh(geometry, createMaterial());
-    addObject(x, y, mesh);
-  }
-
-  {
-    const width = 8;
-    const height = 8;
-    const depth = 8;
-    addSolidGeometry(-2, 2, new THREE.BoxBufferGeometry(width, height, depth));
-  }
-
-  function resizeRendererToDisplaySize(renderer) {
-    const canvas = renderer.domElement;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const needResize = canvas.width !== width || canvas.height !== height;
-    if (needResize) {
-      renderer.setSize(width, height, false);
-    }
-    return needResize; // returns true if resized
-  }
-
-  function render(time) {
-    time *= 0.001; // convert time to seconds
-
-    if (resizeRendererToDisplaySize(renderer)) {
-      const canvas = renderer.domElement;
-      camera.aspect = canvas.clientWidth / canvas.clientHeight;
-      camera.updateProjectionMatrix();
-    }
-
-    objects.forEach((obj, ndx) => {
-      const speed = 0.1 + ndx * 0.1;
-      const rot = time * speed;
-      obj.rotation.x = rot;
-      obj.rotation.y = rot;
-    });
-
-    renderer.render(scene, camera);
-    requestAnimationFrame(render);
-  }
-  requestAnimationFrame(render);
 }

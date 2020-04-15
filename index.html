@@ -4,17 +4,19 @@
     <meta charset='UTF-8' />
     <title>threejs keyframe animation using gltf loader</title>
     <style>
-      html,
       body {
         margin: 0;
         font-size: 16px;
         box-sizing: border-box;
+        padding: 0;
+        overscroll-behavior: none;
       }
 
-      #c {
+      #container {
         padding: 0px;
-        width: 100vw;
-        height: 100vh;
+      }
+
+      canvas {
         display: block;
       }
 
@@ -22,7 +24,7 @@
   </head>
 
   <body>
-  <canvas id='c'></canvas>
+  <div id='container'></div>
   <script type='module' src='./main.js'></script>
   </body>
 
