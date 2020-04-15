@@ -31,10 +31,10 @@ function init() {
   camera = new THREE.PerspectiveCamera(
     45,
     window.innerWidth / window.innerHeight,
-    0.1,
+    1,
     90
   );
-  camera.position.set(13, 10, 14);
+  camera.position.set(15, 14, 16);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   scene = new THREE.Scene();
@@ -42,11 +42,11 @@ function init() {
   // scene.fog = new THREE.Fog(0xffffff, 15, 52);
   scene.fog = new THREE.FogExp2(0xffffff, 0.025);
 
-  let light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.1); // sky color, ground color, intensity
+  let light = new THREE.HemisphereLight(0xff3f4f, 0x0080a0, 1.9); // sky color, ground color, intensity
   light.position.set(0, 8, 0);
   scene.add(light);
 
-  light = new THREE.DirectionalLight(0xe0efdf, 1);
+  light = new THREE.DirectionalLight(0xe04f40, 10);
   light.position.set(8, 25, -9);
   light.target.position.set(0, 0, 0);
   light.castShadow = true;
@@ -54,25 +54,31 @@ function init() {
   // light.shadow.bias = -0.004;
   light.shadow.mapSize.width = 2048;
   light.shadow.mapSize.height = 2048;
-  light.shadow.camera.near = 0.1;
-  light.shadow.camera.far = 120;
+  light.shadow.camera.near = 1;
+  light.shadow.camera.far = 50;
   light.shadow.radius = 10;
+
+  // light.shadow.camera.top = 10;
+  // light.shadow.camera.bottom = -10;
+  // light.shadow.camera.left = -10;
+  // light.shadow.camera.right = 10;
+
   scene.add(light);
   scene.add(light.target);
 
   let newMat = new THREE.MeshStandardMaterial({
-    color: 0x4f0b19,
+    // color: 0x4f0b19,
+    color: 0x1a548a,
     // emissive: 0x3e6677,
-    // emissiveIntensity: -0.05,
+    // emissiveIntensity: -0.1,
     metalness: 0,
     roughness: 1
   });
 
   // ground
-  let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(180, 180), newMat);
-  // let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(90, 90), newMat);
+  let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(150, 150), newMat);
   ground.rotation.x = -Math.PI / 2;
-  ground.position.y = -5;
+  ground.position.y = -1.0;
   scene.add(ground);
   ground.receiveShadow = true;
 
