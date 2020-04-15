@@ -32,7 +32,7 @@ function init() {
     45,
     window.innerWidth / window.innerHeight,
     0.1,
-    5000
+    90
   );
   camera.position.set(13, 10, 14);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
