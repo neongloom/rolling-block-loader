@@ -15,13 +15,12 @@ let mixer;
 
 init();
 animate();
-// main();
 
 function init() {
   const canvas = document.querySelector('#c');
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 
-  container = document.createElement('div');
+  // container = document.createElement('div');
 
   // create camera
   camera = new THREE.PerspectiveCamera(
@@ -34,21 +33,31 @@ function init() {
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x69afb9);
-  // scene.fog = new THREE.Fog(0x008000, 1200, 2000);
+  // scene.background = new THREE.Color(0xb9efff);
+  scene.background = new THREE.Color(0xffffff);
+  scene.fog = new THREE.Fog(0xffffff, 1000, 2100);
 
-  let light = new THREE.HemisphereLight(0xffffff, 0x444444, 0.1); // sky color, ground color, intensity
-  light.position.set(0, 200, 0);
-  // scene.add(light);
-
-  light = new THREE.DirectionalLight(0xd0dfdf, 9.9);
-  light.position.set(400, 200, -600);
-  light.castShadow = true;
-  light.shadow.camera.top = 180;
-  light.shadow.camera.bottom = -100;
-  light.shadow.camera.left = -120;
-  light.shadow.camera.right = 120;
+  let light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.6); // sky color, ground color, intensity
+  light.position.set(0, 800, 0);
   scene.add(light);
+
+  light = new THREE.DirectionalLight(0xd0dfdf, 1.5);
+  light.position.set(-20, 300, 50);
+  light.target.position.set(0, 0, 0);
+  light.castShadow = true;
+
+  light.shadow.bias = -0.004;
+  light.shadow.mapSize.width = 4096;
+  light.shadow.mapSize.height = 4096;
+  light.shadow.camera.near = 0.1;
+  light.shadow.camera.far = 1200;
+  light.shadow.camera.top = 1800;
+  light.shadow.camera.bottom = -1000;
+  light.shadow.camera.left = -1200;
+  light.shadow.camera.right = 1200;
+  light.shadow.radius = 10;
+  scene.add(light);
+  scene.add(light.target);
 
   // scene.add(new CameraHelper(light.shadow.camera));
 
@@ -59,18 +68,17 @@ function init() {
   );
   ground.rotation.x = -Math.PI / 2;
   // mesh.rotation.z = Math.PI / 4;
-  ground.position.y = -100;
-  ground.receiveShadow = true;
-  ground.castShadow = true;
+  ground.position.y = -250;
   scene.add(ground);
+  ground.receiveShadow = true;
 
-  let box = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(200, 200, 200),
-    new THREE.MeshLambertMaterial({ color: 0x69afb9 })
-  );
-  box.receiveShadow = true;
-  box.castShadow = true;
-  box.position.y = 300;
+  // let box = new THREE.Mesh(
+  //   new THREE.BoxBufferGeometry(200, 200, 200),
+  //   new THREE.MeshLambertMaterial({ color: 0x69afb9 })
+  // );
+  // box.receiveShadow = true;
+  // box.castShadow = true;
+  // box.position.y = 300;
   // scene.add(box);
 
   // grid
@@ -85,6 +93,8 @@ function init() {
   // dracoLoader.setDecoderPath('jsm')
   let gltfLoader = new GLTFLoader();
 
+  let newMat = new THREE.MeshStandardMaterial({ color: 0x69afb9 });
+
   gltfLoader.load('cube.glb', function (gltf) {
     let model = gltf.scene;
     scene.add(model);
@@ -95,6 +105,7 @@ function init() {
         obj.castShadow = true;
         obj.receiveShadow = true;
       }
+      if (obj.isMesh) obj.material = newMat;
     });
 
     // let material = new THREE.MeshLambertMaterial({ color: 0x55b663 });
@@ -121,6 +132,7 @@ function init() {
         obj.castShadow = true;
         obj.receiveShadow = true;
       }
+      if (obj.isMesh) obj.material = newMat;
     });
   });
 
@@ -152,14 +164,14 @@ function init() {
   renderer.physicallyCorrectLights = true;
 
   controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(0, 100, 0);
+  controls.target.set(0, 0, 0);
   controls.update();
 
   window.addEventListener('resize', onWindowResize, false);
 
   // stats
   stats = new Stats();
-  container.appendChild(stats.dom);
+  // container.appendChild(stats.dom);
 }
 
 function onWindowResize() {
@@ -193,37 +205,6 @@ function main() {
   const far = 1000;
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   camera.position.z = 120;
-
-  // new scene
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x325688);
-
-  {
-    const color = 0xffffff;
-    const intensity = 1;
-    const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(-1, 2, 4);
-    scene.add(light);
-  }
-  {
-    const color = 0xffffff;
-    const intensity = 1;
-    const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(1, -2, -4);
-    scene.add(light);
-  }
-
-  // add a light
-  const objects = [];
-  const spread = 15;
-
-  function addObject(x, y, obj) {
-    obj.position.x = x * spread;
-    obj.position.y = y * spread;
-
-    scene.add(obj);
-    objects.push(obj);
-  }
 
   function createMaterial() {
     const material = new THREE.MeshPhongMaterial({
@@ -282,5 +263,3 @@ function main() {
   }
   requestAnimationFrame(render);
 }
-
-// main();
