@@ -4,13 +4,14 @@ import Stats from './jsm/stats.module.js';
 
 import { OrbitControls } from './jsm/OrbitControls.js';
 import { FBXLoader } from './jsm/FBXLoader.js';
-// import { GLTFLoader } from './jsm/GLTFLoader.js';
+import { GLTFLoader } from './jsm/GLTFLoader.js';
+import { DRACOLoader } from './jsm/DRACOLoader.js';
 
 var container, stats, controls;
 let renderer, scene, camera;
 let clock = new THREE.Clock();
 
-var mixer;
+let mixer;
 
 init();
 animate();
@@ -18,30 +19,30 @@ animate();
 
 function init() {
   const canvas = document.querySelector('#c');
-  renderer = new THREE.WebGLRenderer({ canvas });
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 
   container = document.createElement('div');
-  document.body.appendChild(container);
 
   // create camera
   camera = new THREE.PerspectiveCamera(
     45,
     window.innerWidth / window.innerHeight,
-    1,
-    2000
+    0.1,
+    5000
   );
-  camera.position.set(100, 200, 300);
+  camera.position.set(900, 600, 1200);
+  camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x50a0a0);
-  scene.fog = new THREE.Fog(0x8080a0, 200, 1000);
+  scene.background = new THREE.Color(0x69afb9);
+  // scene.fog = new THREE.Fog(0x008000, 1200, 2000);
 
-  let light = new THREE.HemisphereLight(0xffffff, 0x444444);
+  let light = new THREE.HemisphereLight(0xffffff, 0x444444, 0.1); // sky color, ground color, intensity
   light.position.set(0, 200, 0);
-  scene.add(light);
+  // scene.add(light);
 
-  light = new THREE.DirectionalLight(0x205fff);
-  light.position.set(0, 200, 100);
+  light = new THREE.DirectionalLight(0xd0dfdf, 9.9);
+  light.position.set(400, 200, -600);
   light.castShadow = true;
   light.shadow.camera.top = 180;
   light.shadow.camera.bottom = -100;
@@ -49,49 +50,106 @@ function init() {
   light.shadow.camera.right = 120;
   scene.add(light);
 
-  // scene.add( new CameraHelper( light.shadow.camera ) );
+  // scene.add(new CameraHelper(light.shadow.camera));
 
   // ground
-  let mesh = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(2000, 2000),
-    new THREE.MeshPhongMaterial({ color: 0x291999, depthWrite: false })
+  let ground = new THREE.Mesh(
+    new THREE.PlaneBufferGeometry(9000, 9000),
+    new THREE.MeshLambertMaterial({ color: 0x69afb9, depthWrite: true })
   );
-  mesh.rotation.x = -Math.PI / 2;
-  mesh.receiveShadow = true;
-  // scene.add(mesh);
+  ground.rotation.x = -Math.PI / 2;
+  // mesh.rotation.z = Math.PI / 4;
+  ground.position.y = -100;
+  ground.receiveShadow = true;
+  ground.castShadow = true;
+  scene.add(ground);
 
-  let grid = new THREE.GridHelper(2000, 20, 0xf00000, 0x0000f0);
+  let box = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(200, 200, 200),
+    new THREE.MeshLambertMaterial({ color: 0x69afb9 })
+  );
+  box.receiveShadow = true;
+  box.castShadow = true;
+  box.position.y = 300;
+  // scene.add(box);
+
+  // grid
+  let grid = new THREE.GridHelper(2000, 20, 0xf00000, 0x0000f0); // size, divisions, colorCenterLine, colorGrid
   grid.material.opacity = 0.8;
   grid.material.transparent = true;
-  scene.add(grid);
+  // scene.add(grid);
 
   // model
   let loader = new FBXLoader();
-  loader.load('rollingcube.fbx', function (object) {
-    mixer = new THREE.AnimationMixer(object);
+  // let dracoLoader = new DRACOLoader();
+  // dracoLoader.setDecoderPath('jsm')
+  let gltfLoader = new GLTFLoader();
 
-    let action = mixer.clipAction(object.animations[0]);
-    action.play();
+  gltfLoader.load('cube.glb', function (gltf) {
+    let model = gltf.scene;
+    scene.add(model);
 
-    object.traverse(function (child) {
-      if (child.isMesh) {
-        child.castShadow = true;
-        child.receiveShadow = true;
+    model.scale.set(100, 100, 100);
+    model.traverse(obj => {
+      if (obj.castShadow !== undefined) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
       }
     });
 
-    scene.add(object);
+    // let material = new THREE.MeshLambertMaterial({ color: 0x55b663 });
+    // mesh = new THREE.MESH(model, material);
+
+    mixer = new THREE.AnimationMixer(model);
+    let clip1 = gltf.animations[0];
+    let action1 = mixer.clipAction(clip1);
+    action1.play();
+    // mixer.clipAction(gltf.animations[0]).play(); // this is the same as the above three lines
+
+    // let action = mixer.clipAction(object.animations[0]);
+    // action.play();
   });
 
-  loader.load('platform.fbx', function (object) {
-    scene.add(object);
+  // scene.add(model);
+  gltfLoader.load('platform.glb', function (gltf) {
+    let model = gltf.scene;
+    scene.add(model);
+
+    model.scale.set(100, 100, 100);
+    model.traverse(obj => {
+      if (obj.castShadow !== undefined) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+      }
+    });
   });
+
+  // platform
+  // loader.load('platform.fbx', function (object) {
+  //   object.castShadow = true;
+  //   object.receiveShadow = true;
+  //   scene.add(object);
+  // });
 
   // renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
-  // container.appendChild(renderer.domElement);
+  renderer.shadowMapSoft = true;
+
+  renderer.shadowCameraNear = 0.1;
+  renderer.shadowCameraFar = camera.far;
+  renderer.shadowCameraFov = 50;
+
+  renderer.shadowMapBias = 0.0039;
+  renderer.shadowMapDarkness = 0.5;
+  renderer.shadowMapWidth = 1024;
+
+  // for accurate colors
+  renderer.gammaFactor = 2.2;
+  renderer.gammaOutput = true;
+
+  renderer.physicallyCorrectLights = true;
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 100, 0);
@@ -114,13 +172,14 @@ function onWindowResize() {
 function animate() {
   requestAnimationFrame(animate);
 
-  var delta = clock.getDelta();
+  let delta = clock.getDelta();
 
   if (mixer) mixer.update(delta);
-
-  renderer.render(scene, camera);
+  controls.update(delta);
 
   stats.update();
+
+  renderer.render(scene, camera);
 }
 
 function main() {
