@@ -3,11 +3,10 @@ import * as THREE from './build/three.module.js';
 import Stats from './jsm/stats.module.js';
 
 import { OrbitControls } from './jsm/OrbitControls.js';
-import { FBXLoader } from './jsm/FBXLoader.js';
 import { GLTFLoader } from './jsm/GLTFLoader.js';
 import { DRACOLoader } from './jsm/DRACOLoader.js';
 
-var container, stats, controls;
+let stats, controls;
 let renderer, scene, camera;
 let clock = new THREE.Clock();
 
@@ -19,8 +18,6 @@ animate();
 function init() {
   const canvas = document.querySelector('#c');
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-
-  // container = document.createElement('div');
 
   // create camera
   camera = new THREE.PerspectiveCamera(
@@ -63,23 +60,13 @@ function init() {
 
   // ground
   let ground = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(9000, 9000),
-    new THREE.MeshLambertMaterial({ color: 0x69afb9, depthWrite: true })
+    new THREE.PlaneBufferGeometry(4000, 4000),
+    new THREE.MeshStandardMaterial({ color: 0x69afb9, depthWrite: true })
   );
   ground.rotation.x = -Math.PI / 2;
-  // mesh.rotation.z = Math.PI / 4;
   ground.position.y = -250;
   scene.add(ground);
   ground.receiveShadow = true;
-
-  // let box = new THREE.Mesh(
-  //   new THREE.BoxBufferGeometry(200, 200, 200),
-  //   new THREE.MeshLambertMaterial({ color: 0x69afb9 })
-  // );
-  // box.receiveShadow = true;
-  // box.castShadow = true;
-  // box.position.y = 300;
-  // scene.add(box);
 
   // grid
   let grid = new THREE.GridHelper(2000, 20, 0xf00000, 0x0000f0); // size, divisions, colorCenterLine, colorGrid
@@ -88,14 +75,13 @@ function init() {
   // scene.add(grid);
 
   // model
-  let loader = new FBXLoader();
   // let dracoLoader = new DRACOLoader();
   // dracoLoader.setDecoderPath('jsm')
   let gltfLoader = new GLTFLoader();
 
   let newMat = new THREE.MeshStandardMaterial({ color: 0x69afb9 });
 
-  gltfLoader.load('cube.glb', function (gltf) {
+  gltfLoader.load('cube.glb', gltf => {
     let model = gltf.scene;
     scene.add(model);
 
@@ -108,21 +94,14 @@ function init() {
       if (obj.isMesh) obj.material = newMat;
     });
 
-    // let material = new THREE.MeshLambertMaterial({ color: 0x55b663 });
-    // mesh = new THREE.MESH(model, material);
-
     mixer = new THREE.AnimationMixer(model);
     let clip1 = gltf.animations[0];
     let action1 = mixer.clipAction(clip1);
     action1.play();
     // mixer.clipAction(gltf.animations[0]).play(); // this is the same as the above three lines
-
-    // let action = mixer.clipAction(object.animations[0]);
-    // action.play();
   });
 
-  // scene.add(model);
-  gltfLoader.load('platform.glb', function (gltf) {
+  gltfLoader.load('platform.glb', gltf => {
     let model = gltf.scene;
     scene.add(model);
 
@@ -137,7 +116,7 @@ function init() {
   });
 
   // platform
-  // loader.load('platform.fbx', function (object) {
+  // loader.load('platform.fbx', object => {
   //   object.castShadow = true;
   //   object.receiveShadow = true;
   //   scene.add(object);
@@ -189,7 +168,7 @@ function animate() {
   if (mixer) mixer.update(delta);
   controls.update(delta);
 
-  stats.update();
+  // stats.update();
 
   renderer.render(scene, camera);
 }
