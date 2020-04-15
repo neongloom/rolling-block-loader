@@ -34,19 +34,19 @@ function init() {
     0.1,
     5000
   );
-  camera.position.set(11, 8, 12);
+  camera.position.set(13, 10, 14);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xffffff);
-  // scene.fog = new THREE.Fog(0xffffff, 10, 22);
-  scene.fog = new THREE.FogExp2(0xffffff, 0.022);
+  // scene.fog = new THREE.Fog(0xffffff, 15, 52);
+  scene.fog = new THREE.FogExp2(0xffffff, 0.025);
 
   let light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.1); // sky color, ground color, intensity
   light.position.set(0, 8, 0);
   scene.add(light);
 
-  light = new THREE.DirectionalLight(0xd0dfdf, 0.8);
+  light = new THREE.DirectionalLight(0xe0efdf, 1);
   light.position.set(8, 25, -9);
   light.target.position.set(0, 0, 0);
   light.castShadow = true;
@@ -61,18 +61,19 @@ function init() {
   scene.add(light.target);
 
   let newMat = new THREE.MeshStandardMaterial({
-    color: 0x390f19,
-    emissive: 0x2e6677,
-    emissiveIntensity: 0.4,
-    metalness: 1,
+    color: 0x4f0b19,
+    // emissive: 0x3e6677,
+    // emissiveIntensity: -0.05,
+    metalness: 0,
     roughness: 1
   });
 
   // ground
-  let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(200, 200), newMat);
+  let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(180, 180), newMat);
+  // let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(90, 90), newMat);
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = -5;
-  // scene.add(ground);
+  scene.add(ground);
   ground.receiveShadow = true;
 
   // let grid = new THREE.GridHelper(2000, 20, 0xf00000, 0x0000f0); // size, divisions, colorCenterLine, colorGrid
