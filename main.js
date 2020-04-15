@@ -32,33 +32,38 @@ function init() {
   scene = new THREE.Scene();
   // scene.background = new THREE.Color(0xb9efff);
   scene.background = new THREE.Color(0xffffff);
-  // scene.fog = new THREE.Fog(0xffffff, 1000, 2000);
+  scene.fog = new THREE.Fog(0xffffff, 10, 22);
 
   let light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.6); // sky color, ground color, intensity
-  light.position.set(0, 800, 0);
+  light.position.set(0, 8, 0);
   scene.add(light);
 
-  light = new THREE.DirectionalLight(0xd0dfdf, 1.5);
-  light.position.set(-20, 300, 50);
+  light = new THREE.DirectionalLight(0xd0dfdf, 1.0);
+  light.position.set(-2, 30, 5);
   light.target.position.set(0, 0, 0);
-  // light.castShadow = true;
+  light.castShadow = true;
 
   // light.shadow.bias = -0.004;
-  // light.shadow.mapSize.width = 2048;
-  // light.shadow.mapSize.height = 2048;
-  // light.shadow.camera.near = 0.1;
-  // light.shadow.camera.far = 1200;
+  light.shadow.mapSize.width = 1024;
+  light.shadow.mapSize.height = 1024;
+  light.shadow.camera.near = 0.1;
+  light.shadow.camera.far = 120;
   // light.shadow.camera.top = 1200;
   // light.shadow.camera.bottom = -1000;
   // light.shadow.camera.left = -1200;
   // light.shadow.camera.right = 1200;
-  // light.shadow.radius = 10;
-  // scene.add(light);
-  // scene.add(light.target);
+  light.shadow.radius = 10;
+  scene.add(light);
+  scene.add(light.target);
 
   // scene.add(new CameraHelper(light.shadow.camera));
 
-  let newMat = new THREE.MeshLambertMaterial({ color: 0x69afb9 });
+  let newMat = new THREE.MeshStandardMaterial({
+    color: 0xb94f69,
+    // emissive: 0xee6677,
+    metalness: 0,
+    roughness: 1
+  });
 
   // ground
   let ground = new THREE.Mesh(
@@ -77,7 +82,6 @@ function init() {
   // grid.material.transparent = true;
   // scene.add(grid);
 
-  // model
   // let dracoLoader = new DRACOLoader();
   // dracoLoader.setDecoderPath('jsm')
   let gltfLoader = new GLTFLoader();
@@ -86,7 +90,7 @@ function init() {
     let model = gltf.scene;
     scene.add(model);
 
-    model.scale.set(1, 1, 1);
+    // model.scale.set(1, 1, 1);
     model.traverse(obj => {
       if (obj.castShadow !== undefined) {
         obj.castShadow = true;
@@ -117,7 +121,7 @@ function init() {
 
   renderer.shadowCameraNear = 1;
   renderer.shadowCameraFar = camera.far;
-  renderer.shadowCameraFov = 50;
+  renderer.shadowCameraFov = 95;
 
   renderer.shadowMapBias = 0.0039;
   renderer.shadowMapDarkness = 0.5;
