@@ -150,7 +150,7 @@ function animate() {
   let delta = clock.getDelta();
 
   if (mixer) mixer.update(delta);
-  controls.update(delta);
+  // controls.update(delta);
   stats.update();
 
   renderer.render(scene, camera);
