@@ -69,10 +69,7 @@ function init() {
   });
 
   // ground
-  let ground = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(200, 200),
-    newMat
-  );
+  let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(200, 200), newMat);
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = -5;
   scene.add(ground);
@@ -87,7 +84,7 @@ function init() {
   // dracoLoader.setDecoderPath('jsm')
   let gltfLoader = new GLTFLoader();
 
-  gltfLoader.load('cubewithplatform.glb', gltf => {
+  gltfLoader.load('cubewithplatform-2.glb', gltf => {
     let model = gltf.scene;
     scene.add(model);
 
