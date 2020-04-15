@@ -84,7 +84,7 @@ function init() {
   // dracoLoader.setDecoderPath('jsm')
   let gltfLoader = new GLTFLoader();
 
-  gltfLoader.load('cubewithplatform-3.glb', gltf => {
+  gltfLoader.load('cubewithplatform.glb', gltf => {
     let model = gltf.scene;
     scene.add(model);
 
