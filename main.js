@@ -26,13 +26,13 @@ function init() {
     0.1,
     5000
   );
-  camera.position.set(900, 600, 1200);
+  camera.position.set(9, 6, 12);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   scene = new THREE.Scene();
   // scene.background = new THREE.Color(0xb9efff);
   scene.background = new THREE.Color(0xffffff);
-  scene.fog = new THREE.Fog(0xffffff, 1000, 2000);
+  // scene.fog = new THREE.Fog(0xffffff, 1000, 2000);
 
   let light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.6); // sky color, ground color, intensity
   light.position.set(0, 800, 0);
@@ -43,18 +43,18 @@ function init() {
   light.target.position.set(0, 0, 0);
   // light.castShadow = true;
 
-  light.shadow.bias = -0.004;
-  light.shadow.mapSize.width = 2048;
-  light.shadow.mapSize.height = 2048;
-  light.shadow.camera.near = 0.1;
-  light.shadow.camera.far = 1200;
-  light.shadow.camera.top = 1200;
-  light.shadow.camera.bottom = -1000;
-  light.shadow.camera.left = -1200;
-  light.shadow.camera.right = 1200;
-  light.shadow.radius = 10;
-  scene.add(light);
-  scene.add(light.target);
+  // light.shadow.bias = -0.004;
+  // light.shadow.mapSize.width = 2048;
+  // light.shadow.mapSize.height = 2048;
+  // light.shadow.camera.near = 0.1;
+  // light.shadow.camera.far = 1200;
+  // light.shadow.camera.top = 1200;
+  // light.shadow.camera.bottom = -1000;
+  // light.shadow.camera.left = -1200;
+  // light.shadow.camera.right = 1200;
+  // light.shadow.radius = 10;
+  // scene.add(light);
+  // scene.add(light.target);
 
   // scene.add(new CameraHelper(light.shadow.camera));
 
@@ -62,19 +62,19 @@ function init() {
 
   // ground
   let ground = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(4000, 4000),
+    new THREE.PlaneBufferGeometry(100, 100),
     newMat
     // new THREE.MeshStandardMaterial({ color: 0x69afb9, depthWrite: true })
   );
   ground.rotation.x = -Math.PI / 2;
-  ground.position.y = -250;
+  ground.position.y = -5;
   scene.add(ground);
   ground.receiveShadow = true;
 
   // grid
-  let grid = new THREE.GridHelper(2000, 20, 0xf00000, 0x0000f0); // size, divisions, colorCenterLine, colorGrid
-  grid.material.opacity = 0.8;
-  grid.material.transparent = true;
+  // let grid = new THREE.GridHelper(2000, 20, 0xf00000, 0x0000f0); // size, divisions, colorCenterLine, colorGrid
+  // grid.material.opacity = 0.8;
+  // grid.material.transparent = true;
   // scene.add(grid);
 
   // model
@@ -86,7 +86,7 @@ function init() {
     let model = gltf.scene;
     scene.add(model);
 
-    model.scale.set(100, 100, 100);
+    model.scale.set(1, 1, 1);
     model.traverse(obj => {
       if (obj.castShadow !== undefined) {
         obj.castShadow = true;
