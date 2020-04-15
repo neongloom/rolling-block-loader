@@ -32,7 +32,7 @@ function init() {
   scene = new THREE.Scene();
   // scene.background = new THREE.Color(0xb9efff);
   scene.background = new THREE.Color(0xffffff);
-  scene.fog = new THREE.Fog(0xffffff, 1000, 2100);
+  scene.fog = new THREE.Fog(0xffffff, 1000, 2000);
 
   let light = new THREE.HemisphereLight(0xffffff, 0x000000, 0.6); // sky color, ground color, intensity
   light.position.set(0, 800, 0);
@@ -44,11 +44,11 @@ function init() {
   light.castShadow = true;
 
   light.shadow.bias = -0.004;
-  light.shadow.mapSize.width = 4096;
-  light.shadow.mapSize.height = 4096;
+  light.shadow.mapSize.width = 2048;
+  light.shadow.mapSize.height = 2048;
   light.shadow.camera.near = 0.1;
   light.shadow.camera.far = 1200;
-  light.shadow.camera.top = 1800;
+  light.shadow.camera.top = 1200;
   light.shadow.camera.bottom = -1000;
   light.shadow.camera.left = -1200;
   light.shadow.camera.right = 1200;
@@ -81,7 +81,7 @@ function init() {
 
   let newMat = new THREE.MeshStandardMaterial({ color: 0x69afb9 });
 
-  gltfLoader.load('cube.glb', gltf => {
+  gltfLoader.load('cubewithplatform.glb', gltf => {
     let model = gltf.scene;
     scene.add(model);
 
@@ -101,20 +101,6 @@ function init() {
     // mixer.clipAction(gltf.animations[0]).play(); // this is the same as the above three lines
   });
 
-  gltfLoader.load('platform.glb', gltf => {
-    let model = gltf.scene;
-    scene.add(model);
-
-    model.scale.set(100, 100, 100);
-    model.traverse(obj => {
-      if (obj.castShadow !== undefined) {
-        obj.castShadow = true;
-        obj.receiveShadow = true;
-      }
-      if (obj.isMesh) obj.material = newMat;
-    });
-  });
-
   // platform
   // loader.load('platform.fbx', object => {
   //   object.castShadow = true;
@@ -128,7 +114,7 @@ function init() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMapSoft = true;
 
-  renderer.shadowCameraNear = 0.1;
+  renderer.shadowCameraNear = 1;
   renderer.shadowCameraFar = camera.far;
   renderer.shadowCameraFov = 50;
 
