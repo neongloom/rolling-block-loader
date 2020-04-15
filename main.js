@@ -72,7 +72,7 @@ function init() {
   let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(200, 200), newMat);
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = -5;
-  scene.add(ground);
+  // scene.add(ground);
   ground.receiveShadow = true;
 
   // let grid = new THREE.GridHelper(2000, 20, 0xf00000, 0x0000f0); // size, divisions, colorCenterLine, colorGrid
