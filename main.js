@@ -41,7 +41,7 @@ function init() {
   light = new THREE.DirectionalLight(0xd0dfdf, 1.5);
   light.position.set(-20, 300, 50);
   light.target.position.set(0, 0, 0);
-  light.castShadow = true;
+  // light.castShadow = true;
 
   light.shadow.bias = -0.004;
   light.shadow.mapSize.width = 2048;
@@ -58,10 +58,13 @@ function init() {
 
   // scene.add(new CameraHelper(light.shadow.camera));
 
+  let newMat = new THREE.MeshLambertMaterial({ color: 0x69afb9 });
+
   // ground
   let ground = new THREE.Mesh(
     new THREE.PlaneBufferGeometry(4000, 4000),
-    new THREE.MeshStandardMaterial({ color: 0x69afb9, depthWrite: true })
+    newMat
+    // new THREE.MeshStandardMaterial({ color: 0x69afb9, depthWrite: true })
   );
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = -250;
@@ -78,8 +81,6 @@ function init() {
   // let dracoLoader = new DRACOLoader();
   // dracoLoader.setDecoderPath('jsm')
   let gltfLoader = new GLTFLoader();
-
-  let newMat = new THREE.MeshStandardMaterial({ color: 0x69afb9 });
 
   gltfLoader.load('cubewithplatform.glb', gltf => {
     let model = gltf.scene;
