@@ -42,11 +42,11 @@ function init() {
   // scene.fog = new THREE.Fog(0xffffff, 15, 52);
   scene.fog = new THREE.FogExp2(0xffffff, 0.025);
 
-  // let light = new THREE.HemisphereLight(0xff3f4f, 0x0080a0, 1.9); // sky color, ground color, intensity
-  // light.position.set(0, 8, 0);
-  // scene.add(light);
+  let light = new THREE.HemisphereLight(0xff3f4f, 0x0080a0, 1.9); // sky color, ground color, intensity
+  light.position.set(0, 8, 0);
+  scene.add(light);
 
-  let light = new THREE.DirectionalLight(0xe04f40, 10);
+  light = new THREE.DirectionalLight(0xe04f40, 10);
   light.position.set(8, 25, -9);
   light.target.position.set(0, 0, 0);
   light.castShadow = true;
@@ -61,18 +61,18 @@ function init() {
 
   scene.add(light);
 
-  // let newMat = new THREE.MeshLambertMaterial({
-  //   color: 0x1a548a,
-  //   metalness: 0,
-  //   roughness: 1
-  // });
+  let newMat = new THREE.MeshLambertMaterial({
+    color: 0x1a548a,
+    metalness: 0,
+    roughness: 1
+  });
 
   // ground
-  // let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(150, 150), newMat);
-  // ground.rotation.x = -Math.PI / 2;
-  // ground.position.y = -1.0;
-  // scene.add(ground);
-  // ground.receiveShadow = true;
+  let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(150, 150), newMat);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = -1.0;
+  scene.add(ground);
+  ground.receiveShadow = true;
 
   let gltfLoader = new GLTFLoader();
 
