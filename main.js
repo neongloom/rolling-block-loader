@@ -40,7 +40,7 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xffffff);
   // scene.fog = new THREE.Fog(0xffffff, 15, 52);
-  // scene.fog = new THREE.FogExp2(0xffffff, 0.025);
+  scene.fog = new THREE.FogExp2(0xffffff, 0.025);
 
   // let light = new THREE.HemisphereLight(0xff3f4f, 0x0080a0, 1.9); // sky color, ground color, intensity
   // light.position.set(0, 8, 0);
@@ -96,25 +96,17 @@ function init() {
     // mixer.clipAction(gltf.animations[0]).play(); // this is the same as the above three lines
   });
 
-  // platform // for fbx loader
-  // loader.load('platform.fbx', object => {
-  //   object.castShadow = true;
-  //   object.receiveShadow = true;
-  //   scene.add(object);
-  // });
-
-  // renderer.shadowMap.enabled = true;
+  renderer.shadowMap.enabled = true;
   // renderer.shadowMap.type = THREE.VSMShadowMap;
   // renderer.shadowMap.type = THREE.PCFShadowMap;
-  // renderer.shadowMap.type = 1;
   // renderer.shadowMapSoft = true;
 
   // for accurate colors
-  // renderer.gammaFactor = 2.2;
-  // renderer.gammaOutput = true;
+  renderer.gammaFactor = 2.2;
+  renderer.gammaOutput = true;
 
-  // renderer.physicallyCorrectLights = true;
-  // renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.physicallyCorrectLights = true;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
   // controls = new OrbitControls(camera, renderer.domElement);
   // controls.target.set(0, 0, 0);
