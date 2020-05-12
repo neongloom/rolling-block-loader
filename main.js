@@ -56,7 +56,8 @@ function init() {
   light.shadow.mapSize.height = 2048;
   light.shadow.camera.near = 1;
   light.shadow.camera.far = 50;
-  light.shadow.radius = 10;
+  // light.shadow.radius = 10;
+  // light.shadow.radius = 10;
 
   scene.add(light);
 
@@ -67,11 +68,11 @@ function init() {
   });
 
   // ground
-  let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(150, 150), newMat);
-  ground.rotation.x = -Math.PI / 2;
-  ground.position.y = -1.0;
-  scene.add(ground);
-  ground.receiveShadow = true;
+  // let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(150, 150), newMat);
+  // ground.rotation.x = -Math.PI / 2;
+  // ground.position.y = -1.0;
+  // scene.add(ground);
+  // ground.receiveShadow = true;
 
   let gltfLoader = new GLTFLoader();
 
@@ -80,13 +81,13 @@ function init() {
     scene.add(model);
 
     // model.scale.set(1, 1, 1);
-    model.traverse(obj => {
-      if (obj.castShadow !== undefined) {
-        obj.castShadow = true;
-        obj.receiveShadow = true;
-      }
-      if (obj.isMesh) obj.material = newMat;
-    });
+    // model.traverse(obj => {
+    //   if (obj.castShadow !== undefined) {
+    //     obj.castShadow = true;
+    //     obj.receiveShadow = true;
+    //   }
+    //   if (obj.isMesh) obj.material = newMat;
+    // });
 
     mixer = new THREE.AnimationMixer(model);
     let clip1 = gltf.animations[0];
