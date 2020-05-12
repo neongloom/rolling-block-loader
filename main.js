@@ -68,7 +68,7 @@ function init() {
   });
 
   // ground
-  let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(150, 150), newMat);
+  let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(10, 10), newMat);
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = -1.0;
   scene.add(ground);
