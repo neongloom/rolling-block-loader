@@ -61,11 +61,11 @@ function init() {
 
   scene.add(light);
 
-  let newMat = new THREE.MeshLambertMaterial({
-    color: 0x1a548a,
-    metalness: 0,
-    roughness: 1
-  });
+  // let newMat = new THREE.MeshLambertMaterial({
+  //   color: 0x1a548a,
+  //   metalness: 0,
+  //   roughness: 1
+  // });
 
   // ground
   // let ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(150, 150), newMat);
@@ -76,7 +76,7 @@ function init() {
 
   let gltfLoader = new GLTFLoader();
 
-  gltfLoader.load('cubewithplatform.glb', gltf => {
+  gltfLoader.load('cubewithplatform-3.glb', gltf => {
     let model = gltf.scene;
     scene.add(model);
 
