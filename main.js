@@ -43,13 +43,13 @@ function init() {
   scene.fog = new THREE.FogExp2(0xffffff, 0.025);
 
   let light = new THREE.HemisphereLight(0xff3f4f, 0x0080a0, 1.9); // sky color, ground color, intensity
-  light.position.set(0, 8, 0);
-  scene.add(light);
+  // light.position.set(0, 8, 0);
+  // scene.add(light);
 
   light = new THREE.DirectionalLight(0xe04f40, 10);
   light.position.set(8, 25, -9);
   light.target.position.set(0, 0, 0);
-  light.castShadow = true;
+  // light.castShadow = true;
 
   // light.shadow.bias = -0.004;
   light.shadow.mapSize.width = 2048;
@@ -64,7 +64,7 @@ function init() {
   // light.shadow.camera.right = 10;
 
   scene.add(light);
-  scene.add(light.target);
+  // scene.add(light.target);
 
   let newMat = new THREE.MeshStandardMaterial({
     // color: 0x4f0b19,
@@ -118,22 +118,22 @@ function init() {
   //   scene.add(object);
   // });
 
-  renderer.shadowMap.enabled = true;
+  // renderer.shadowMap.enabled = true;
   // renderer.shadowMap.type = THREE.VSMShadowMap;
   // renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.shadowMap.type = 1;
-  renderer.shadowMapSoft = true;
+  // renderer.shadowMapSoft = true;
 
   // for accurate colors
-  renderer.gammaFactor = 2.2;
-  renderer.gammaOutput = true;
+  // renderer.gammaFactor = 2.2;
+  // renderer.gammaOutput = true;
 
-  renderer.physicallyCorrectLights = true;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  // renderer.physicallyCorrectLights = true;
+  // renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(0, 0, 0);
-  controls.update();
+  // controls = new OrbitControls(camera, renderer.domElement);
+  // controls.target.set(0, 0, 0);
+  // controls.update();
 
   window.addEventListener('resize', onWindowResize, false);
 }
