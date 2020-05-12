@@ -56,7 +56,7 @@ function init() {
   light.shadow.mapSize.height = 2048;
   light.shadow.camera.near = 1;
   light.shadow.camera.far = 50;
-  // light.shadow.radius = 10;
+  light.shadow.radius = 10;
   // light.shadow.radius = 10;
 
   scene.add(light);
@@ -81,13 +81,13 @@ function init() {
     scene.add(model);
 
     // model.scale.set(1, 1, 1);
-    // model.traverse(obj => {
-    //   if (obj.castShadow !== undefined) {
-    //     obj.castShadow = true;
-    //     obj.receiveShadow = true;
-    //   }
-    //   if (obj.isMesh) obj.material = newMat;
-    // });
+    model.traverse(obj => {
+      if (obj.castShadow !== undefined) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+      }
+      // if (obj.isMesh) obj.material = newMat;
+    });
 
     mixer = new THREE.AnimationMixer(model);
     let clip1 = gltf.animations[0];
