@@ -2,9 +2,9 @@ import * as THREE from './build/three.module.js';
 
 import Stats from './jsm/stats.module.js';
 
-import { OrbitControls } from './jsm/OrbitControls.js';
+// import { OrbitControls } from './jsm/OrbitControls.js';
 import { GLTFLoader } from './jsm/GLTFLoader.js';
-import { DRACOLoader } from './jsm/DRACOLoader.js';
+// import { DRACOLoader } from './jsm/DRACOLoader.js';
 
 let stats, controls;
 let renderer, scene, camera;
@@ -40,13 +40,13 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xffffff);
   // scene.fog = new THREE.Fog(0xffffff, 15, 52);
-  scene.fog = new THREE.FogExp2(0xffffff, 0.025);
+  // scene.fog = new THREE.FogExp2(0xffffff, 0.025);
 
-  let light = new THREE.HemisphereLight(0xff3f4f, 0x0080a0, 1.9); // sky color, ground color, intensity
+  // let light = new THREE.HemisphereLight(0xff3f4f, 0x0080a0, 1.9); // sky color, ground color, intensity
   // light.position.set(0, 8, 0);
   // scene.add(light);
 
-  light = new THREE.DirectionalLight(0xe04f40, 10);
+  let light = new THREE.DirectionalLight(0xe04f40, 10);
   light.position.set(8, 25, -9);
   light.target.position.set(0, 0, 0);
   // light.castShadow = true;
@@ -58,19 +58,10 @@ function init() {
   light.shadow.camera.far = 50;
   light.shadow.radius = 10;
 
-  // light.shadow.camera.top = 10;
-  // light.shadow.camera.bottom = -10;
-  // light.shadow.camera.left = -10;
-  // light.shadow.camera.right = 10;
-
   scene.add(light);
-  // scene.add(light.target);
 
-  let newMat = new THREE.MeshStandardMaterial({
-    // color: 0x4f0b19,
+  let newMat = new THREE.MeshLambertMaterial({
     color: 0x1a548a,
-    // emissive: 0x3e6677,
-    // emissiveIntensity: -0.1,
     metalness: 0,
     roughness: 1
   });
@@ -82,13 +73,6 @@ function init() {
   scene.add(ground);
   ground.receiveShadow = true;
 
-  // let grid = new THREE.GridHelper(2000, 20, 0xf00000, 0x0000f0); // size, divisions, colorCenterLine, colorGrid
-  // grid.material.opacity = 0.8;
-  // grid.material.transparent = true;
-  // scene.add(grid);
-
-  // let dracoLoader = new DRACOLoader();
-  // dracoLoader.setDecoderPath('jsm')
   let gltfLoader = new GLTFLoader();
 
   gltfLoader.load('cubewithplatform.glb', gltf => {
@@ -121,7 +105,7 @@ function init() {
   // renderer.shadowMap.enabled = true;
   // renderer.shadowMap.type = THREE.VSMShadowMap;
   // renderer.shadowMap.type = THREE.PCFShadowMap;
-  renderer.shadowMap.type = 1;
+  // renderer.shadowMap.type = 1;
   // renderer.shadowMapSoft = true;
 
   // for accurate colors
